@@ -55,31 +55,34 @@ export class DateComponetComponent {
           let h = this.actual.get('hour');
           let m = this.actual.get('minute');
           let s = this.actual.get('second')
-          let fecha = moment(modelDate).hours(h).minutes(m).seconds(s);
-          console.log(fecha);
+          let userDate = moment(modelDate).hours(h).minutes(m).seconds(s);
+          return userDate;
+      }
+
+      // 2.- Obtenemos una fecha con diferencia de 72 horas usando el metodo moment() y asignando la hora actual
+      //para después comparalas
+
+      public limitDateValidInvoice(){
+         let h = this.actual.get('hour');
+         let m = this.actual.get('minute');
+         let s = this.actual.get('second')
+         let rigthNow = moment().hour(h).minute(m).second(s);
+         //hace 3 días.
+         let threeDaysAgo = rigthNow.subtract(72,'hours');
+         return threeDaysAgo;
+      }
+
+      // 3.- Asegurandonos de que la fecha que fue elegida jamas se exeda de 72 horas.
+
+      public compareDates(){
+          this.dateChoosenByTheUser().isBefore(this.limitDateValidInvoice());
+          console.log(this.dateChoosenByTheUser());
+          console.log(this.limitDateValidInvoice());
+          console.log(this.dateChoosenByTheUser().isBefore(this.limitDateValidInvoice()));
       }
    
 
-      public prueba(){
-      // Ya tenemos la fecha que se selecciono el usurio pero con hora
-      //procedemos a crear la fecha de hace 3 dias con respecto a hoy para despues comparalar
-      //la que eligio el usuario  y saber si ya tiene mas de 3 dias, entonces hay que repetir el paso anterior
-      //para setar la fecha pasada
-      let rigthNow = moment().second(s);
-      rigthNow.subtract(72, 'hours');
-      console.log(rigthNow);
-      console.log(fecha.isBefore(rigthNow));
-      }
-
-      public checkTime(i) {
-      if (i < 10) {
-        i = '0' + i;
-      }
-      return i;
-      }
-
-
-      //El ultimo método en ejecutarse
+      //El último método en ejecutarse
 
       public setInvoiceValiDate() {
         //hay que checar si es que viene la fecha del date picker si no por defecto es la de hoy
@@ -90,6 +93,15 @@ export class DateComponetComponent {
         let actualHour = moment().format('HH:mm:ss');
         let finalDate = `${year}-${month}-${day} ${actualHour}`
         console.log(finalDate);
+      }
+
+      //NOTE: Utilizo este bloque de código para que la fecha final de la factura sea seteada correctamente.
+
+      public checkTime(i) {
+      if (i < 10) {
+        i = '0' + i;
+      }
+      return i;
       }
       
 }
